@@ -25,7 +25,7 @@ Definition pb_sum_def:
 End
 
 Definition pb_val_def[simp]:
-  pb_val l (PBC a i) ⇔ pb_sum l a ≤ i
+  pb_val l (PBC a i) ⇔ pb_sum l a ≥ i
 End
 
 (* lemmas about pb_sum *)
