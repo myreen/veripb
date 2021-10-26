@@ -9,6 +9,34 @@ Datatype:
   pb_constaint = PBC (num |-> int) int
 End
 
+(*
+
+Datatype:
+  pb_constaint = PBC (num |-> num # bool) num
+End
+
+Definition b2i_def[simp]:
+  b2i T = 1:int ∧
+  b2i F = 0:int
+End
+
+  4 * (1-i) + 3 * i + 2 * j >= 4
+  1 * (1-i) + 2 * j >= 1
+
+  ~i either 0 or 1
+
+We need:
+ - addition of constraints
+ - division (same factor in each)
+ - division (round up coeficients, follows from above version)
+ - saturation
+ - substitution (either literal or zero, one)
+ - drat-like rule
+ - implication (do not remove sat assignments)
+ - dominance (more complicated than above)
+
+*)
+
 (* semantics *)
 
 Definition b2i_def[simp]:
@@ -37,6 +65,16 @@ Definition pb_sum_to_def:
     | NONE => pb_sum_to n l a
     | SOME v => v * b2i (l n) + pb_sum_to n l a
 End
+
+Theorem pb_sum_to_least:
+  ∀a l. pb_sum l a = pb_sum_to (LEAST k. ∀n. k ≤ n ⇒ ~n IN FDOM a) l a
+Proof
+  cheat
+QED
+
+(*
+  EVAL “pb_sum_to 4 l (FEMPTY |++ [(1,2);(3,4)])”
+*)
 
 Theorem pb_sum_to_intro:
   ∀a l. ∃k. ∀n. pb_sum l a = pb_sum_to (k+n) l a
