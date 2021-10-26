@@ -1,0 +1,13 @@
+# HOL stuff
+*Script
+*Theory.sig
+*Theory.sml
+*Theory.dat
+*.uo
+*.ui
+*.o
+.HOLMK
+.hollogs
+
+# Misc
+.DS_Store
