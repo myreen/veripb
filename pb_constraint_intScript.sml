@@ -1,7 +1,7 @@
 open HolKernel Parse boolLib bossLib;
 open arithmeticTheory integerTheory finite_mapTheory;
 
-val _ = new_theory "pb_constraint";
+val _ = new_theory "pb_constraint_int";
 
 (* abstract syntax *)
 
@@ -65,12 +65,6 @@ Definition pb_sum_to_def:
     | NONE => pb_sum_to n l a
     | SOME v => v * b2i (l n) + pb_sum_to n l a
 End
-
-Theorem pb_sum_to_least:
-  ∀a l. pb_sum l a = pb_sum_to (LEAST k. ∀n. k ≤ n ⇒ ~n IN FDOM a) l a
-Proof
-  cheat
-QED
 
 (*
   EVAL “pb_sum_to 4 l (FEMPTY |++ [(1,2);(3,4)])”
