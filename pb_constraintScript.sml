@@ -1,5 +1,5 @@
 open HolKernel Parse boolLib bossLib;
-open arithmeticTheory listTheory rich_listTheory sortingTheory;
+open arithmeticTheory listTheory rich_listTheory sortingTheory pairTheory;
 
 val _ = new_theory "pb_constraint";
 
@@ -12,7 +12,7 @@ Datatype:
 End
 
 Datatype:
-  pb_constaint = PBC ((num # lit) list) num
+  pb_constraint = PBC ((num # lit) list) num
 End
 
 (* semantics *)
@@ -195,6 +195,38 @@ Proof
   \\ Cases_on ‘l5’ \\ fs []
   \\ Cases_on ‘h'’ \\ fs []
 QED
+
+(* division *)
+
+Definition divisible_def:
+  divisible (PBC l n) k = EVERY (λ(c,_). c MOD k = 0) l
+End
+
+Definition divide_def:
+  divide (PBC l n) k =
+    PBC (MAP (λ(c,v). (c DIV k, v)) l) ((n + (k - 1)) DIV k)
+End
+
+Theorem divide_thm:
+  divisible c k ∧ k ≠ 0 ∧ eval_pbc w c ⇒ eval_pbc w (divide c k)
+Proof
+  Cases_on ‘c’ \\ fs [divide_def,divisible_def]
+  \\ rw [eval_pbc_def,GREATER_EQ]
+  \\ gvs [DIV_LE_X]
+  \\ gvs [LEFT_ADD_DISTRIB]
+  \\ qsuff_tac ‘k * SUM (MAP (eval_term w) (MAP (λ(c,v). (c DIV k,v)) l)) =
+                SUM (MAP (eval_term w) l)’
+  THEN1 fs []
+  \\ last_x_assum mp_tac
+  \\ pop_assum kall_tac
+  \\ Induct_on ‘l’ \\ fs [FORALL_PROD]
+  \\ fs [LEFT_ADD_DISTRIB] \\ rw []
+  \\ ‘0 < k’ by fs []
+  \\ drule DIVISION
+  \\ disch_then (qspec_then ‘p_1’ mp_tac)
+  \\ asm_rewrite_tac [] \\ gvs []
+QED
+
 
 (*
 
